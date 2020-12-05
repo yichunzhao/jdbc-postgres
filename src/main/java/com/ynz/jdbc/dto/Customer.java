@@ -11,7 +11,12 @@ public class Customer implements Dto {
     private String state;
     private String zipCode;
 
-    public Customer(){}
+    public Customer() {
+    }
+
+    public static Customer create() {
+        return new Customer();
+    }
 
     @Override
     public Long getId() {

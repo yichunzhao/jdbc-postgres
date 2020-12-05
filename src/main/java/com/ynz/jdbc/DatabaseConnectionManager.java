@@ -20,4 +20,5 @@ public class DatabaseConnectionManager {
         return DriverManager.getConnection(url, properties);
     }
 
+
 }
