@@ -13,7 +13,7 @@ public abstract class AbstractDAO<T extends Dto> {
         this.conn = con;
     }
 
-    public abstract T create(T dto);
+    public abstract int create(T dto);
 
     public abstract T findById(Long id);
 

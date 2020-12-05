@@ -20,8 +20,25 @@ public class CustomerDAO extends AbstractDAO<Customer> {
     }
 
     @Override
-    public Customer create(Customer dto) {
-        return null;
+    public int create(Customer dto) {
+        int result = -1;
+
+        try (PreparedStatement stmt = this.conn.prepareStatement(INSERT)) {
+            stmt.setString(1, dto.getFirstName());
+            stmt.setString(2, dto.getLastName());
+            stmt.setString(3, dto.getEmail());
+            stmt.setString(4, dto.getPhone());
+            stmt.setString(5, dto.getAddress());
+            stmt.setString(6, dto.getCity());
+            stmt.setString(7, dto.getState());
+            stmt.setString(8, dto.getZipCode());
+            result = stmt.executeUpdate();
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw new RuntimeException(e);
+        }
+        return result;
     }
 
     @Override

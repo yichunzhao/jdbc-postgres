@@ -29,6 +29,16 @@ class CustomerDAOTest {
 
     @Test
     void create() {
+        Customer customer = Customer.create();
+        customer.setFirstName("Mikey");
+        customer.setLastName("XXX");
+        customer.setCity("CPH");
+        customer.setPhone("12345678");
+        customer.setState("HHH");
+        customer.setEmail("xxx@gmail.com");
+        customer.setZipCode("10222");
+        int result = customerDAO.create(customer);
+        assertEquals(result, 1);
     }
 
     @Test
