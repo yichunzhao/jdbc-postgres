@@ -38,7 +38,7 @@ class CustomerDAOTest {
         customer.setEmail("xxx@gmail.com");
         customer.setZipCode("10222");
         int result = customerDAO.create(customer);
-        assertEquals(result, 1);
+        assertEquals(1, result);
     }
 
     @Test
@@ -74,6 +74,12 @@ class CustomerDAOTest {
 
     @Test
     void update() {
+        Customer updated = Customer.create();
+        updated.setId(10000L);
+        updated.setFirstName("Mike");
+        updated.setLastName("YYY");
+        int result = customerDAO.update(updated);
+        assertEquals(1, result);
     }
 
     @Test

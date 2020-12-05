@@ -13,6 +13,9 @@ public class CustomerDAO extends AbstractDAO<Customer> {
     private static final String INSERT = "INSERT INTO Customer(first_name, last_name, email, phone, address, city, state, zipcode) " +
             "VALUES(?, ?, ?, ?, ?, ?, ?, ?) ";
 
+    private static final String UPDATE = "UPDATE Customer SET first_name = ?, last_name = ?, email =?, phone = ?, " +
+            "address= ?, city=?, state=?, zipcode=? WHERE customer_id = ?";
+
     private static final String READ_BY_ID = "SELECT customer_id, first_name, last_name, email, phone, address, city, state, zipcode from Customer where customer_id = ?";
 
     public CustomerDAO(Connection con) {
@@ -74,8 +77,26 @@ public class CustomerDAO extends AbstractDAO<Customer> {
     }
 
     @Override
-    public Customer update(Customer dto) {
-        return null;
+    public int update(Customer dto) {
+        int result = -1;
+        try (PreparedStatement stmt = this.conn.prepareStatement(UPDATE)) {
+            stmt.setString(1, dto.getFirstName());
+            stmt.setString(2, dto.getLastName());
+            stmt.setString(3, dto.getEmail());
+            stmt.setString(4, dto.getPhone());
+            stmt.setString(5, dto.getAddress());
+            stmt.setString(6, dto.getCity());
+            stmt.setString(7, dto.getState());
+            stmt.setString(8, dto.getZipCode());
+            stmt.setLong(9, dto.getId());
+            result = stmt.executeUpdate();
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw new RuntimeException(e);
+        }
+
+        return result;
     }
 
     @Override
