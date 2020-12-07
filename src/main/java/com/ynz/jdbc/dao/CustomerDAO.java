@@ -13,8 +13,10 @@ public class CustomerDAO extends AbstractDAO<Customer> {
     private static final String INSERT = "INSERT INTO Customer(first_name, last_name, email, phone, address, city, state, zipcode) " +
             "VALUES(?, ?, ?, ?, ?, ?, ?, ?) ";
 
-    private static final String UPDATE = "UPDATE Customer SET first_name = ?, last_name = ?, email =?, phone = ?, " +
+    private static final String UPDATE_BY_ID = "UPDATE Customer SET first_name = ?, last_name = ?, email =?, phone = ?, " +
             "address= ?, city=?, state=?, zipcode=? WHERE customer_id = ?";
+
+    private static final String DELETE_BY_ID = "DELETE FROM Customer where customer_id = ?";
 
     private static final String READ_BY_ID = "SELECT customer_id, first_name, last_name, email, phone, address, city, state, zipcode from Customer where customer_id = ?";
 
@@ -79,7 +81,7 @@ public class CustomerDAO extends AbstractDAO<Customer> {
     @Override
     public int update(Customer dto) {
         int result = -1;
-        try (PreparedStatement stmt = this.conn.prepareStatement(UPDATE)) {
+        try (PreparedStatement stmt = this.conn.prepareStatement(UPDATE_BY_ID)) {
             stmt.setString(1, dto.getFirstName());
             stmt.setString(2, dto.getLastName());
             stmt.setString(3, dto.getEmail());
@@ -101,6 +103,15 @@ public class CustomerDAO extends AbstractDAO<Customer> {
 
     @Override
     public void delete(Customer dto) {
+
+        try (PreparedStatement stmt = this.conn.prepareStatement(DELETE_BY_ID)) {
+            stmt.setLong(1, dto.getId());
+            stmt.executeUpdate();
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw new RuntimeException(e);
+        }
 
     }
 }

@@ -14,11 +14,11 @@ import static org.hamcrest.Matchers.nullValue;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 class CustomerDAOTest {
     private static Connection conn;
     private static CustomerDAO customerDAO;
-
 
     @BeforeAll
     static void setUp() {
@@ -56,7 +56,6 @@ class CustomerDAOTest {
                 () -> assertEquals(found.getState(), "FL"),
                 () -> assertEquals(found.getZipCode(), "33164")
         );
-
     }
 
     @Test
@@ -84,5 +83,12 @@ class CustomerDAOTest {
 
     @Test
     void delete() {
+        Customer target = Customer.create();
+        target.setId(10000L);
+
+        customerDAO.delete(target);
+
+        Customer found = customerDAO.findById(10000L);
+        assertNull(found.getId());
     }
 }
