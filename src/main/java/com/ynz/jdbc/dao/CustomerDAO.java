@@ -1,6 +1,7 @@
 package com.ynz.jdbc.dao;
 
 import com.ynz.jdbc.dto.Customer;
+import com.ynz.jdbc.dto.Order;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -112,6 +113,6 @@ public class CustomerDAO extends AbstractDAO<Customer> {
             e.printStackTrace();
             throw new RuntimeException(e);
         }
-
     }
+
 }

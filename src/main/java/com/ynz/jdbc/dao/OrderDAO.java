@@ -24,6 +24,8 @@ public class OrderDAO extends AbstractDAO<Order> {
                     "join customer c on o.customer_id = c.customer_id " +
                     "where o.order_id = ?";
 
+    private static final String FIND_BY_CUSTOMER_ID = "select * from get_orders_by_customer(?)";
+
     public OrderDAO(Connection con) {
         super(con);
     }
@@ -90,4 +92,60 @@ public class OrderDAO extends AbstractDAO<Order> {
     public void delete(Order dto) {
 
     }
+
+    public List<Order> getOrderByOrderId(Long customerId) {
+        List<Order> orders = new ArrayList<>();
+
+        try (PreparedStatement stmt = this.conn.prepareStatement(FIND_BY_CUSTOMER_ID)) {
+            stmt.setLong(1, customerId);
+            ResultSet rs = stmt.executeQuery();
+
+            long pre_orderId = 0;
+
+            Order order = null;
+
+            while (rs.next()) {
+
+                long cur_orderId = rs.getLong("order_id");
+
+                if (cur_orderId != pre_orderId) {
+                    order = new Order();
+                    List<OrderItem> orderItems = new ArrayList<>();
+                    order.setOrderItems(orderItems);
+
+                    order.setCustomerFirstName(rs.getString("cust_first_name"));
+                    order.setCustomerLastName(rs.getString("cust_last_name"));
+                    order.setCustomerEmail(rs.getString("cust_email"));
+
+                    order.setOrderId(cur_orderId);
+                    pre_orderId = cur_orderId;
+
+                    order.setCreateDateDate(rs.getDate("creation_dt"));
+                    order.setTotalDue(rs.getBigDecimal("total_due"));
+                    order.setStatus(rs.getString("status"));
+                    order.setSalespersonFirstName(rs.getString("sales_first_name"));
+                    order.setSalespersonLastName(rs.getString("sales_last_name"));
+                    order.setCustomerEmail("sales_email");
+                }
+
+                OrderItem orderItem = new OrderItem();
+                orderItem.setQuantity(rs.getInt("item_quanitty"));
+                orderItem.setProductCode(rs.getString("item_code"));
+                orderItem.setProductName(rs.getString("item_name"));
+                orderItem.setProductSize(rs.getInt("item_size"));
+                orderItem.setProductVariety(rs.getString("item_variety"));
+                orderItem.setProductPrice((rs.getBigDecimal("item_price")));
+                order.getOrderItems().add(orderItem);
+            }
+
+            orders.add(order);
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw new RuntimeException(e);
+        }
+
+        return orders;
+    }
+
 }

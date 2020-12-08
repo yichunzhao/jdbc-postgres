@@ -6,6 +6,7 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 import java.sql.Connection;
+import java.util.List;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.hasSize;
@@ -32,6 +33,15 @@ class OrderDAOTest {
                 () -> assertEquals(order.getId(), 1148L),
                 () -> assertThat(order.getOrderItems(), hasSize(3))
         );
+    }
 
+    @Test
+    void findOrdersByCustomerId() {
+        List<Order> orders = orderDAO.getOrderByOrderId(387L);
+        assertAll(
+                () -> assertThat(orders, hasSize(1)),
+                () -> assertNotNull(orders.get(0)),
+                () -> assertThat(orders.get(0).getOrderItems(), hasSize(3))
+        );
     }
 }
