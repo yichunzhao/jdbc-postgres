@@ -101,7 +101,6 @@ public class OrderDAO extends AbstractDAO<Order> {
             ResultSet rs = stmt.executeQuery();
 
             long pre_orderId = 0;
-
             Order order = null;
 
             while (rs.next()) {
@@ -112,6 +111,7 @@ public class OrderDAO extends AbstractDAO<Order> {
                     order = new Order();
                     List<OrderItem> orderItems = new ArrayList<>();
                     order.setOrderItems(orderItems);
+                    orders.add(order);
 
                     order.setCustomerFirstName(rs.getString("cust_first_name"));
                     order.setCustomerLastName(rs.getString("cust_last_name"));
@@ -137,8 +137,6 @@ public class OrderDAO extends AbstractDAO<Order> {
                 orderItem.setProductPrice((rs.getBigDecimal("item_price")));
                 order.getOrderItems().add(orderItem);
             }
-
-            orders.add(order);
 
         } catch (SQLException e) {
             e.printStackTrace();

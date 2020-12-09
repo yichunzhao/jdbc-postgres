@@ -10,6 +10,7 @@ import java.util.List;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.hasSize;
+import static org.hamcrest.Matchers.is;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -44,4 +45,28 @@ class OrderDAOTest {
                 () -> assertThat(orders.get(0).getOrderItems(), hasSize(3))
         );
     }
+
+    @Test
+    void givenCustomerHavingTwoOrdersOnePaidOneCancelled_ReturnTwoOrders() {
+        List<Order> orders = orderDAO.getOrderByOrderId(789L);
+        assertAll(
+                () -> assertThat(orders, hasSize(2)),
+                () -> assertNotNull(orders.get(0)),
+                () -> assertNotNull(orders.get(1)),
+                () -> assertThat(orders.get(0).getStatus(), is("cancelled")),
+                () -> assertThat(orders.get(1).getStatus(), is("paid"))
+        );
+    }
+
+    @Test
+    void givenCustomerHavingOneOrdersPaidWithTwoOrderItems_ReturnOneOrder() {
+        List<Order> orders = orderDAO.getOrderByOrderId(336L);
+        assertAll(
+                () -> assertThat(orders, hasSize(1)),
+                () -> assertNotNull(orders.get(0)),
+                () -> assertThat(orders.get(0).getStatus(), is("paid")),
+                () -> assertThat(orders.get(0).getOrderItems(), hasSize(2))
+        );
+    }
+
 }
