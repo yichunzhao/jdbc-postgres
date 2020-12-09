@@ -6,9 +6,11 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 import java.sql.Connection;
+import java.util.List;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.nullValue;
 import static org.junit.jupiter.api.Assertions.assertAll;
@@ -69,6 +71,12 @@ class CustomerDAOTest {
 
     @Test
     void findAll() {
+    }
+
+    @Test
+    void givenLimit10_returnAllCustomersSize10() {
+        List<Customer> customers = customerDAO.findAllSortedLimit(10);
+        assertThat(customers, hasSize(10));
     }
 
     @Test
