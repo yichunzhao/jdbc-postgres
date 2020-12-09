@@ -17,6 +17,7 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class CustomerDAOTest {
     private static Connection conn;
@@ -77,6 +78,18 @@ class CustomerDAOTest {
     void givenLimit10_returnAllCustomersSize10() {
         List<Customer> customers = customerDAO.findAllSortedLimit(10);
         assertThat(customers, hasSize(10));
+    }
+
+    @Test
+    void givenPageSiz30eAndPageNum0_returnAllCustomers30() {
+        List<Customer> customers = customerDAO.findAllSortedAndPaged(30, 0);
+
+        assertAll(
+                () -> assertThat(customers, hasSize(30)),
+                () -> assertTrue(customers.stream().map(Customer::getLastName).allMatch(s -> s.startsWith("A"))),
+                () -> assertThat(customers.get(0).getLastName(), is("Adams")),
+                () -> assertThat(customers.get(29).getLastName(), is("Austin"))
+        );
     }
 
     @Test

@@ -24,6 +24,9 @@ public class CustomerDAO extends AbstractDAO<Customer> {
     private static final String READ_ALL_LIMIT = "SELECT customer_id, first_name, last_name, email, phone, address, city, " +
             "state, zipcode from Customer order by last_name, first_name limit ?";
 
+    private static final String READ_ALL_LIMIT_PAGED = "SELECT customer_id, first_name, last_name, email, phone, address, city, " +
+            "state, zipcode from Customer order by last_name, first_name limit ? offset ?";
+
     public CustomerDAO(Connection con) {
         super(con);
     }
@@ -111,7 +114,38 @@ public class CustomerDAO extends AbstractDAO<Customer> {
         }
 
         return customers;
+    }
 
+    public List<Customer> findAllSortedAndPaged(int pageSize, int pageNum) {
+        if (pageSize < 0 || pageNum < 0)
+            throw new IllegalArgumentException("pageSize and pageNum must be positive number");
+        List<Customer> customers = new ArrayList<>();
+        try (PreparedStatement stmt = this.conn.prepareStatement(READ_ALL_LIMIT_PAGED)) {
+            stmt.setInt(1, pageSize);
+            stmt.setInt(2, pageNum);
+
+            ResultSet rs = stmt.executeQuery();
+            while (rs.next()) {
+                Customer customer = new Customer();
+
+                customer.setId(rs.getLong("customer_id"));
+                customer.setFirstName(rs.getString("first_name"));
+                customer.setLastName(rs.getString("last_name"));
+                customer.setEmail(rs.getString("email"));
+                customer.setPhone(rs.getString("phone"));
+                customer.setAddress(rs.getString("address"));
+                customer.setCity(rs.getString("city"));
+                customer.setState(rs.getString("state"));
+                customer.setZipCode(rs.getString("zipcode"));
+
+                customers.add(customer);
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw new RuntimeException(e);
+        }
+        return customers;
     }
 
     @Override
