@@ -16,12 +16,12 @@ A connection pool works as a cache, keeping a gounp of connection alive, respond
 
 ### Exception Handling
 
-There is only SQLException in JDBC. It is too general to handle. 
+The SQLException is the only exception for the JDBC. It is too general to handle. 
 
 So, may re-pack it into your own exceptions, having an error code and/or into a specific exception. 
 
 Repacking them into Runtime exceptions, and handle them in a higher layer, rather than handling them anywhere.  
 
-If you leak a SQLException, then you have to pollut your method signature; and leaving the invokers concerns. 
+If you leak a SQLException, then you have to pollute your method signature; and leaving the invokers concerns. 
 
 So a better way may be re-pack SQLException in a Runtime exception and with an error code. 
