@@ -149,8 +149,17 @@ public class CustomerDAO extends AbstractDAO<Customer> {
     }
 
     @Override
-    public int update(Customer dto) {
-        int result = -1;
+    public Customer update(Customer dto) {
+        Customer customer = null;
+
+        //turn off auto-commit; transaction boundary.
+        try {
+            this.conn.setAutoCommit(false);
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw new RuntimeException(e);
+        }
+
         try (PreparedStatement stmt = this.conn.prepareStatement(UPDATE_BY_ID)) {
             stmt.setString(1, dto.getFirstName());
             stmt.setString(2, dto.getLastName());
@@ -161,14 +170,23 @@ public class CustomerDAO extends AbstractDAO<Customer> {
             stmt.setString(7, dto.getState());
             stmt.setString(8, dto.getZipCode());
             stmt.setLong(9, dto.getId());
-            result = stmt.executeUpdate();
-
+            stmt.executeUpdate();
+            //transaction boundary
+            this.conn.commit();
+            customer = this.findById(dto.getId());
         } catch (SQLException e) {
+            //handling transaction failure.
+            try {
+                this.conn.rollback();
+            } catch (SQLException tEx) {
+                tEx.printStackTrace();
+                throw new RuntimeException(tEx);
+            }
             e.printStackTrace();
             throw new RuntimeException(e);
         }
 
-        return result;
+        return customer;
     }
 
     @Override

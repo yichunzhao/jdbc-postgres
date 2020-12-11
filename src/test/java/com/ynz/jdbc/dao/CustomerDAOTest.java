@@ -94,12 +94,19 @@ class CustomerDAOTest {
 
     @Test
     void update() {
-        Customer updated = Customer.create();
-        updated.setId(10000L);
-        updated.setFirstName("Mike");
-        updated.setLastName("YYY");
-        int result = customerDAO.update(updated);
-        assertEquals(1, result);
+        Customer used = Customer.create();
+
+        used.setFirstName("Mike");
+        used.setLastName("BlaBla");
+        used.setId(10004L);
+
+        Customer found = customerDAO.findById(10004L);
+        used.setLastName("YYY");
+
+        Customer updated = customerDAO.update(used);
+        assertNotNull(updated);
+        assertThat(updated.getId(), is(10004L));
+        assertThat(updated.getLastName(), is("YYY"));
     }
 
     @Test

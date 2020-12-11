@@ -84,8 +84,8 @@ public class OrderDAO extends AbstractDAO<Order> {
     }
 
     @Override
-    public int update(Order dto) {
-        return 0;
+    public Order update(Order dto) {
+        return null;
     }
 
     @Override

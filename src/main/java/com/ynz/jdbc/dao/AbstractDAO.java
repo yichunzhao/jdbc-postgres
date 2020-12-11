@@ -19,7 +19,7 @@ public abstract class AbstractDAO<T extends Dto> {
 
     public abstract List<T> findAll();
 
-    public abstract int update(T dto);
+    public abstract T update(T dto);
 
     public abstract void delete(T dto);
 
