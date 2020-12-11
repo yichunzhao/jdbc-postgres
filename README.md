@@ -16,7 +16,7 @@ A connection pool works as a cache, keeping a gounp of connection alive, respond
 
 ### Exception Handling
 
-The SQLException is the only exception for the JDBC. It is too general to handle. 
+Every exception in JDBC is SQLException. It is too general to handle. 
 
 So, may re-pack it into your own exceptions, having an error code and/or into a specific exception. 
 
